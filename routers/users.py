@@ -41,3 +41,35 @@ def login(
         "access_token": access_token, 
         "token_type": "bearer"
     }
+
+@router.post("/register")
+def register(
+    from_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(database.get_db)
+):
+    try:
+        if db.query(models.Usuario).filter(models.Usuario.username == from_data.username).first():
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Username already exist",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+            
+        else:
+            from models import Usuario
+            from auth import obtener_password_hasheado
+            nuevo_usuario = Usuario(
+                username = from_data.username,
+                hashed_password = obtener_password_hasheado(from_data.password)
+            )
+            db.add(nuevo_usuario)
+            db.commit()
+            return {
+                "mensaje": "Usuario creado exitosamente"
+            }
+    except Exception as e:
+        print(f"Error al crear usuario: {e}")
+        return {
+                "mensaje": "El usuario ya existe"
+            }
+

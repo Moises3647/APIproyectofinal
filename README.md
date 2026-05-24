@@ -68,6 +68,7 @@ Puedes interactuar con los endpoints directamente desde el navegador:
 | Método | Endpoint | Descripción | Autenticación |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/users/login` | Obtener token de acceso (OAuth2). | No |
+| `POST` | `/users/register` | Registrar un nuevo usuario. | No |
 | `POST` | `/sensors/s1` | Registrar temperatura, humedad y foto. | **Sí (JWT)** |
 | `GET` | `/sensors/s1/latest` | Obtener el registro más reciente. | **Sí (JWT)** |
 | `GET` | `/sensors/s1/history` | Obtener historial de registros. | **Sí (JWT)** |
@@ -77,6 +78,11 @@ Puedes interactuar con los endpoints directamente desde el navegador:
 El sistema crea automáticamente dos usuarios si no existen:
 - **Administrador**: `admin` / `password123`
 - **Dispositivo (RPi)**: `raspberry_pi` / `rasberrypi2`
+
+## Creacion de nuevos usuarios
+
+Puedes crear nuevos usuarios de tipo User para visualizar los datos por la app
+- **Nombre de usuario** debe ser unico para cada usuario
 
 ## 📂 Estructura del Proyecto
 
