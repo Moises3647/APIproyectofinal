@@ -47,32 +47,31 @@ def register(
     from_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(database.get_db)
 ):
-    try:
-        if db.query(models.Usuario).filter(models.Usuario.username == from_data.username).first():
+    if db.query(models.Usuario).filter(models.Usuario.username == from_data.username).first():
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="Username already exist",
                 headers={"WWW-Authenticate": "Bearer"},
             ) 
-        else:
-            from models import Usuario
-            from auth import obtener_password_hasheado
-            
-            if from_data.username.strip() == "" or from_data.password.strip() == "":
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Campos vacios",
-                    headers={"WWW-Authenticate": "Bearer"},
-                )
-            nuevo_usuario = Usuario(
-                username = from_data.username,
-                hashed_password = obtener_password_hasheado(from_data.password)
+    try:
+        from models import Usuario
+        from auth import obtener_password_hasheado
+        
+        if from_data.username.strip() == "" or from_data.password.strip() == "":
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Campos vacios",
+                headers={"WWW-Authenticate": "Bearer"},
             )
-            db.add(nuevo_usuario)
-            db.commit()
-            return {
-                "mensaje": "Usuario creado exitosamente"
-            }
+        nuevo_usuario = Usuario(
+            username = from_data.username,
+            hashed_password = obtener_password_hasheado(from_data.password)
+        )
+        db.add(nuevo_usuario)
+        db.commit()
+        return {
+            "mensaje": "Usuario creado exitosamente"
+        }
     except Exception as e:
         db.rollback()
         print(f"Error al crear usuario: {e}")
