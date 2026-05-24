@@ -53,11 +53,17 @@ def register(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="Username already exist",
                 headers={"WWW-Authenticate": "Bearer"},
-            )
-            
+            ) 
         else:
             from models import Usuario
             from auth import obtener_password_hasheado
+            
+            if from_data.username.strip() == "" or from_data.password.strip() == "":
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Campos vacios",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
             nuevo_usuario = Usuario(
                 username = from_data.username,
                 hashed_password = obtener_password_hasheado(from_data.password)
@@ -68,8 +74,11 @@ def register(
                 "mensaje": "Usuario creado exitosamente"
             }
     except Exception as e:
+        db.rollback()
         print(f"Error al crear usuario: {e}")
-        return {
-                "mensaje": "El usuario ya existe"
-            }
+        raise HTTPException(
+            status_code=500,
+            detail=e
+        )
+        
 
