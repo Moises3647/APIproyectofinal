@@ -47,32 +47,37 @@ def register(
     from_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(database.get_db)
 ):
+    #1. Checar si el usuario estaba registrado anteriormente
     if db.query(models.Usuario).filter(models.Usuario.username == from_data.username).first():
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="Username already exist",
                 headers={"WWW-Authenticate": "Bearer"},
             ) 
+    #2. si no intenta crear el nuevo usuario
     try:
         from models import Usuario
         from auth import obtener_password_hasheado
-        
+        #si el nombre y contraseña esta vacio marca una excepcion
         if from_data.username.strip() == "" or from_data.password.strip() == "":
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Campos vacios",
                 headers={"WWW-Authenticate": "Bearer"},
             )
+        #3. crea el objeto usuario
         nuevo_usuario = Usuario(
             username = from_data.username,
             hashed_password = obtener_password_hasheado(from_data.password)
         )
+        #4. lo guarda en la base de datos
         db.add(nuevo_usuario)
         db.commit()
         return {
             "mensaje": "Usuario creado exitosamente"
         }
     except Exception as e:
+        #5. si da error regresa la base de datos a un estado anterior y levanta una exepcion
         db.rollback()
         print(f"Error al crear usuario: {e}")
         raise HTTPException(

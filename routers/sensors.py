@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Identificador de tu App de Android en Jetpack Compose
+# Identificador de la App de Android en Jetpack Compose
 PACKAGE_NAME = "gonzalez.moises.apptemphumed"
 
 # CONFIGURACIÓN DE CLOUDINARY

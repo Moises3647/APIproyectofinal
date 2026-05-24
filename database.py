@@ -29,10 +29,10 @@ def crear_usuarios_por_defecto():
         if not admin_existe:
             print("Generando usuarios por defecto en la base de datos...")
             
-            # Usuario para ti (Monitorear en la App `gonzalez.moises.apptemphumed`)
+            # Usuario administradpr (Monitorear en la App `gonzalez.moises.apptemphumed`)
             usuario_admin = Usuario(
                 username="admin",
-                hashed_password=obtener_password_hasheado("password123"), # Cambia esto por algo seguro
+                hashed_password=obtener_password_hasheado("password123"), # Contraseña por defecto
                 role="admin"
             )
             

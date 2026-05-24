@@ -18,9 +18,7 @@ ALGORITHM = "HS256"
 # Permite a FastAPI extraer automáticamente el token de las cabeceras HTTP (Bearer Token)
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="users/login")
 
-# =====================================================================
 # 1. FUNCIONES PARA CONTRASENAS (Hasheo y Verificación)
-# =====================================================================
 
 def verificar_password(plain_password: str, hashed_password: str) -> bool:
     """Compara una contraseña en texto plano con el hash guardado en la DB."""
@@ -30,9 +28,7 @@ def obtener_password_hasheado(password: str) -> str:
     """Genera un hash seguro a partir de una contraseña. Se usa para las Seeds/Semillas."""
     return pwd_context.hash(password)
 
-# =====================================================================
 # 2. FUNCIONES PARA TOKENS JWT (Creación y Validación)
-# =====================================================================
 
 def crear_token_acceso(data: dict) -> str:
     """Genera un token JWT firmado con un tiempo de expiración de 1 año."""
